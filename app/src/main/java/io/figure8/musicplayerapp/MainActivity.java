@@ -8,6 +8,7 @@ import android.app.ActivityManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
        }
     }
 
+    private boolean isMusicPlayerInit;
+
     @Override
     protected void  onResume(){
         super.onResume();
@@ -51,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(PERMISSIONS,REQUEST_PERMISSIONS);
             return;
         }
+        if (isMusicPlayerInit){ }
+            final ListView listView = findViewById(R.id.listView);
 
-    }
+        isMusicPlayerInit =true;
 }
+}
+
+
+
+
