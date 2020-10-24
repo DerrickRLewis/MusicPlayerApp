@@ -6,12 +6,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -74,8 +76,22 @@ public class MainActivity extends AppCompatActivity {
     }
     private void fillMusicList(){
         musicFilesList.clear();
-        addMusicFilesFrom(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)));
-        addMusicFilesFrom(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+        addMusicFilesFrom(String.valueOf(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)));
+        addMusicFilesFrom(String.valueOf(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+    }
+
+
+    private  void playMusicFile(String path){
+        MediaPlayer mp =new MediaPlayer();
+        try {
+            mp.setDataSource(path);
+            mp.prepare();
+            mp.start();
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -89,9 +105,16 @@ public class MainActivity extends AppCompatActivity {
             final ListView listView = findViewById(R.id.listView);
         final TextAdapter textAdapter = new TextAdapter();
         musicFilesList =new ArrayList<>();
-
-
-
+        fillMusicList();
+        textAdapter.setData(musicFilesList);
+        listView.setAdapter(textAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String musicFilePath = musicFilesList.get(position);
+                playMusicFile(musicFilePath);
+            }
+        });
 
         isMusicPlayerInit =true;
 }
@@ -126,7 +149,7 @@ class TextAdapter extends BaseAdapter{
             convertView.setTag(new ViewHolder((TextView)convertView.findViewById(R.id.myItem)));
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
-        final String item = data.get(position):
+        final String item = data.get(position);
         holder.info.setText(item.substring(item.lastIndexOf('/')+ 1));
         return convertView;
 
